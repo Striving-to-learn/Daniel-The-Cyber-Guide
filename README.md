@@ -1,6 +1,4 @@
 # Daniel-The-Cyber-Guide
-Daniel the Cyber Guide — A local cybersecurity AI that analyzes your notes and provides context‑aware answers powered by Llama 3.
-# Daniel the Cyber Guide
 
 Daniel the Cyber Guide is a local AI assistant that reads cybersecurity notes, HackTheBox writeups, TryHackMe material, and personal lab documentation. It organizes the information so a local LLM can answer security questions with relevant context. The project was built in a Kali Linux home lab using Python, Ollama, and a small text‑search database.
 
