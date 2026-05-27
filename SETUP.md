@@ -166,4 +166,3 @@ http://localhost:5000
 | ChromaDB | Lightweight text search database |
 | LangChain | Text splitting and retrieval helpers |
 | Flask | Optional web interface |
-````
