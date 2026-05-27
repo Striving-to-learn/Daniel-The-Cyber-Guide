@@ -27,7 +27,7 @@ The goal is to create a fast, offline‑friendly assistant for learning and revi
 - Flask (optional web UI)
 
 ## Project Structure
-cyber-llm/
+```cyber-llm/
 │── notes/             # Raw cybersecurity notes and writeups
 │── rag/
 │   ├── chroma/        # ChromaDB persistent database
@@ -37,7 +37,7 @@ cyber-llm/
 │   └── app.py        # Optional Flask UI
 │── README.md
 │── SETUP.md
-
+```
 ## How It Works
 The system loads your cybersecurity notes, breaks them into smaller readable sections, stores them in a searchable database, and uses a local LLM to answer questions based on the most relevant pieces of information.
 This creates a simple, offline‑capable assistant for reviewing and understanding security concepts.
