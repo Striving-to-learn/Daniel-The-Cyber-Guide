@@ -7,7 +7,7 @@ DB_DIR = os.path.expanduser("~/cyber-llm/rag/chroma")
 
 # Load the persistent Chroma database
 client = PersistentClient(path=DB_DIR)
-collection = client.get_collection("cyber_notes")
+collection = client.get_or_create_collection("cyber_notes")
 
 def query_rag(q):
     """Query the vector database and send the retrieved context to the LLM."""
@@ -34,7 +34,7 @@ Answer:
 
     # Generate the response using Ollama
     response = ollama.generate(
-        model="llama3:8b",
+        model="llama3",
         prompt=prompt
     )
 
