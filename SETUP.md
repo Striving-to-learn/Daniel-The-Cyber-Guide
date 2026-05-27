@@ -118,14 +118,6 @@ Copy your markdown notes, lab writeups, and cybersecurity material into:
 ~/cyber-llm/notes/
 ```
 
-This is the source folder used by the ingestion script.
-
-Cybersecurity notes, Obsidian vaults, and lab writeups should be copied into:
-
-```bash
-~/cyber-llm/notes/
-```
-
 This directory acts as the primary data source for ingestion.
 
 ## Common Directory Issues
