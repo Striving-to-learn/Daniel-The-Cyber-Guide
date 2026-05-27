@@ -190,7 +190,7 @@ When activated, the shell prompt should change to something similar to:
 ## Install Required Packages
 
 ```bash
-pip install chromadb langchain langchain-text-splitters flask pypdf python-dotenv
+pip install chromadb langchain-text-splitters flask pypdf python-dotenv ollama
 ```
 
 These packages support:
@@ -267,7 +267,7 @@ from chromadb import PersistentClient
 client = PersistentClient(path=DB_DIR)
 collection = client.get_or_create_collection("cyber_notes")
 ```
-
+Make sure both `build_rag.py` and `query_rag.py` use `get_or_create_collection()` or `get_collection()` consistently, and that the collection name is `"cyber_notes"` in both scripts.
 If you encounter errors related to deprecated Chroma configuration, update the ingestion script to use the newer API.
 
 ---
@@ -276,27 +276,21 @@ If you encounter errors related to deprecated Chroma configuration, update the i
 
 The ingestion script performs the following steps:
 
-- Reads raw notes from `data/`
+- Reads raw markdown notes from `~/cyber-llm/notes/`
 - Cleans and normalizes text
-- Splits text into smaller sections
-- Stores sections in a searchable database (ChromaDB)
+- Splits text into smaller chunks
+- Stores chunks in a searchable database (ChromaDB)
 
 ## Run the Ingestion
-
-```bash
-python app/ingest.py
-```
-
-If using a separate RAG build script:
 
 ```bash
 python ~/cyber-llm/rag/build_rag.py
 ```
 
-This generates the database inside:
+This generates the ChromaDB database inside:
 
 ```bash
-project/db/
+~/cyber-llm/rag/chroma/
 ```
 
 A successful run should end with output similar to:
@@ -311,24 +305,38 @@ Ingestion complete.
 
 The query script:
 
-- Searches the stored text
-- Retrieves the most relevant sections
+- Loads the ChromaDB database from `~/cyber-llm/rag/chroma/`
+- Retrieves relevant chunks from your notes
 - Sends them to Llama 3 via Ollama
 - Prints a context-aware answer
 
-## Example Query
+## Run the Query Script (Interactive)
 
 ```bash
-python app/query.py "Explain Kerberoasting"
+python ~/cyber-llm/rag/query_rag.py
+```
+
+You will see:
+
+```text
+RAG ready. Ask anything from your notes.
+
+Ask:
+```
+
+Example questions:
+
+```text
+Explain Kerberoasting
+What is credential dumping?
+How do I detect lateral movement?
 ```
 
 ---
 
-# Optional Web Interface
-
-A simple Flask UI is included for browser-based queries.
-
 ## Start the Web Interface
+
+Make sure you are in the project root and the virtual environment is activated, then:
 
 ```bash
 python web/app.py
