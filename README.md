@@ -1,2 +1,2 @@
 # Daniel-The-Cyber-Guide
-Daniel the Cyber Guide — A local AI assistant that reads your cybersecurity notes and answers security questions using Llama 3.
+Daniel the Cyber Guide — A local cybersecurity AI that analyzes your notes and provides context‑aware answers powered by Llama 3.
