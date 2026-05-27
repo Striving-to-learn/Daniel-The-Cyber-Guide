@@ -22,11 +22,17 @@ sudo apt update && sudo apt full-upgrade -y
 
 ## VMware Tools
 
+If using VMware, install the VMware guest tools for better display scaling, clipboard sharing, and VM integration.
+
 ```bash
 sudo apt install -y open-vm-tools open-vm-tools-desktop
 ```
 
+This project was personally built and tested using VMware.
+
 ## VirtualBox Guest Additions
+
+If using VirtualBox, install the VirtualBox guest additions for improved VM support and desktop integration.
 
 ```bash
 sudo apt install -y virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest-dkms
@@ -34,13 +40,20 @@ sudo apt install -y virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest
 
 ## Choosing the Correct Kali Image
 
-You can install Kali using:
+Kali Linux images can be downloaded from:
 
-- The standard ISO (manual installation)
-- The prebuilt VMware image
-- The prebuilt VirtualBox image
+https://www.kali.org/get-kali/#kali-platforms
 
-All options work, but the prebuilt images are generally faster to configure.
+You can choose between:
+
+- **Installer Images** — traditional ISO files used for manual installation
+- **Virtual Machines** — prebuilt VMware and VirtualBox images
+
+If you want a standard ISO installer, select the **Installer Images** section.
+
+If you want a preconfigured virtual machine, select the **Virtual Machines** section and download either the VMware or VirtualBox image.
+
+The prebuilt virtual machine images are generally faster and easier to configure because many settings and drivers are already prepared.
 
 ---
 
