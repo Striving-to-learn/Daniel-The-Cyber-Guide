@@ -10,9 +10,11 @@ The system uses Python scripts to read notes, clean and split text, store them i
 
 **OS:** Kali Linux (VMware or VirtualBox)
 
-Kali Linux was chosen because it includes many cybersecurity tools out of the box, but the project works on most Debian-based distributions including Ubuntu, Debian, and Pop!_OS.
+The project was developed and tested on **Kali Linux**, but it should also work on other Debian‑based distributions such as **Ubuntu, Debian, Pop!_OS, and Parrot OS**. These systems share similar package managers and Python environments, so the installation steps are nearly identical.
 
-Older or heavily modified Kali Linux installations may require additional manual configuration because some tooling and dependencies still rely on older Python compatibility layers or outdated package versions. Certain packages may need to be manually installed or adjusted depending on the system version.
+Kali Linux was chosen because it includes many cybersecurity tools out of the box. Other distributions will work, but they may not include the same preinstalled security utilities.
+
+Because Parrot OS and other Debian‑based distributions may package dependencies differently, some commands or package names may require small adjustments depending on the operating system version and installed repositories. Older or heavily modified Kali or Parrot installations may also require additional manual configuration due to outdated Python layers or older package versions.
 
 ## System Updates
 
@@ -38,23 +40,41 @@ If using VirtualBox, install the VirtualBox guest additions for improved VM supp
 sudo apt install -y virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest-dkms
 ```
 
-## Choosing the Correct Kali Image
+## Choosing the Correct OS Image
 
+You can install Kali Linux or Parrot OS (Security Edition) using either a standard ISO or a prebuilt virtual machine image. Prebuilt images are generally faster and easier to configure because many settings and drivers are already prepared.
+
+### Kali Linux Images
 Kali Linux images can be downloaded from:
 
 https://www.kali.org/get-kali/#kali-platforms
 
 You can choose between:
 
-- **Installer Images** — traditional ISO files used for manual installation
-- **Virtual Machines** — prebuilt VMware and VirtualBox images
+Installer Images — traditional ISO files used for manual installation
 
-If you want a standard ISO installer, select the **Installer Images** section.
+Virtual Machines — prebuilt VMware and VirtualBox images
 
-If you want a preconfigured virtual machine, select the **Virtual Machines** section and download either the VMware or VirtualBox image.
+If you want a standard ISO installer, select the Installer Images section.
 
-The prebuilt virtual machine images are generally faster and easier to configure because many settings and drivers are already prepared.
+If you want a preconfigured virtual machine, select the Virtual Machines section and download either the VMware or VirtualBox image.
 
+Prebuilt VM images are typically the fastest option because they include optimized drivers and preconfigured settings.
+
+### Parrot OS (Security Edition) Images
+Parrot OS Security Edition can be downloaded from:
+
+https://parrotsec.org/download/
+
+Available formats include:
+
+ISO — for bare metal, laptops, desktops, or manual VM installation
+
+OVA — optimized for VirtualBox
+
+VMDK — optimized for VMware
+
+The Parrot Security Edition includes penetration testing tools similar to Kali and is fully compatible with this project. Installation steps are nearly identical to Kali because Parrot is also Debian‑based. 
 ---
 
 # Local LLM Runtime (Ollama)
