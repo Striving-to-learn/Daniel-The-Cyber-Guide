@@ -326,6 +326,10 @@ How do I detect lateral movement?
 
 ---
 
+---
+
+# Optional Web Interface
+
 ## Start the Web Interface
 
 Make sure you are in the project root and the virtual environment is activated, then:
