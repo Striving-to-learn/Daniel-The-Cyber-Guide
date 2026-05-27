@@ -2,13 +2,17 @@
 
 This project was built and tested inside a Kali Linux virtual machine running on VMware. The setup includes installing system packages, configuring a Python environment, installing Ollama for local LLM inference, and preparing a directory structure for storing cybersecurity notes and running the ingestion pipeline.
 
-The system uses Python scripts to read notes, clean and split text, store it in a lightweight searchable database, and query it using a local LLM (Llama 3). All processing happens locally, and the assistant runs fully offline once installed.
+The system uses Python scripts to read notes, clean and split text, store them in a lightweight searchable database, and query them using a local LLM (Llama 3). All processing happens locally, and the assistant runs fully offline once installed.
 
 ---
 
 # Operating System and Environment
 
-**OS:** Kali Linux (VMware guest)
+**OS:** Kali Linux (VMware or VirtualBox)
+
+Kali Linux was chosen because it includes many cybersecurity tools out of the box, but the project works on most Debian-based distributions including Ubuntu, Debian, and Pop!_OS.
+
+Older or heavily modified Kali Linux installations may require additional manual configuration because some tooling and dependencies still rely on older Python compatibility layers or outdated package versions. Certain packages may need to be manually installed or adjusted depending on the system version.
 
 ## System Updates
 
@@ -21,6 +25,22 @@ sudo apt update && sudo apt full-upgrade -y
 ```bash
 sudo apt install -y open-vm-tools open-vm-tools-desktop
 ```
+
+## VirtualBox Guest Additions
+
+```bash
+sudo apt install -y virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest-dkms
+```
+
+## Choosing the Correct Kali Image
+
+You can install Kali using:
+
+- The standard ISO (manual installation)
+- The prebuilt VMware image
+- The prebuilt VirtualBox image
+
+All options work, but the prebuilt images are generally faster to configure.
 
 ---
 
@@ -52,7 +72,7 @@ This confirms that the local LLM runtime is working correctly.
 
 # Project Directory Structure
 
-A dedicated directory was created to store notes, scripts, and model-related files.
+A dedicated directory was created to store notes, scripts, databases, and model-related files.
 
 ## Create the Directories
 
@@ -67,19 +87,65 @@ Cybersecurity notes, Obsidian vaults, and lab writeups should be copied into:
 ~/cyber-llm/notes/
 ```
 
-This directory acts as the data source for ingestion.
+This directory acts as the primary data source for ingestion.
+
+## Common Directory Issues
+
+One common issue is attempting to access directories before they exist.
+
+Example:
+
+```bash
+ls -l ~/cyber-llm/rag
+```
+
+Possible error:
+
+```text
+No such file or directory
+```
+
+This usually means the directory structure was not created yet. Re-run the `mkdir -p` commands shown earlier.
+
+Another common issue involves copying note directories from incorrect or non-existent paths.
+
+Example:
+
+```bash
+cp -r "/path/to/notes" ~/cyber-llm/notes/obsidian/
+```
+
+Possible error:
+
+```text
+cannot stat '/path/to/notes': No such file or directory
+```
+
+This indicates the source directory path is incorrect or does not exist. Verify the source path before copying files.
 
 ---
 
 # Python Environment
 
-A virtual environment was created to isolate dependencies.
+A Python virtual environment was created to isolate dependencies and avoid conflicts with Kali Linux system packages.
+
+## Why a Virtual Environment Is Required
+
+Kali Linux follows PEP 668 restrictions, which prevent many system-wide `pip` installations. Because of this, packages such as ChromaDB must be installed inside a Python virtual environment.
+
+This is expected behavior on modern Kali Linux systems.
 
 ## Create and Activate the Virtual Environment
 
 ```bash
 python3 -m venv ~/cyber-llm/venv
 source ~/cyber-llm/venv/bin/activate
+```
+
+When activated, the shell prompt should change to something similar to:
+
+```text
+(venv) kali@kali:~
 ```
 
 ## Install Required Packages
@@ -94,6 +160,76 @@ These packages support:
 - Storing searchable text chunks
 - Running the ingestion and query scripts
 - Optional web interface
+
+## Common Python Dependency Errors
+
+### ChromaDB Not Installed
+
+Example:
+
+```bash
+python3 ~/cyber-llm/rag/build_rag.py
+```
+
+Possible error:
+
+```text
+ModuleNotFoundError: No module named 'chromadb'
+```
+
+This usually means the script was executed outside the virtual environment.
+
+Activate the virtual environment first:
+
+```bash
+source ~/cyber-llm/venv/bin/activate
+```
+
+Then install dependencies:
+
+```bash
+pip install chromadb
+```
+
+### Missing langchain_text_splitters Module
+
+Possible error:
+
+```text
+ModuleNotFoundError: No module named 'langchain_text_splitters'
+```
+
+Fix by installing the package:
+
+```bash
+pip install langchain-text-splitters
+```
+
+---
+
+# ChromaDB Compatibility Notes
+
+Recent ChromaDB releases introduced breaking API changes.
+
+Older tutorials may use deprecated client syntax such as:
+
+```python
+client = chromadb.Client(Settings(
+    chroma_db_impl="duckdb+parquet",
+    persist_directory=DB_DIR
+))
+```
+
+Newer ChromaDB versions use the updated API:
+
+```python
+from chromadb import PersistentClient
+
+client = PersistentClient(path=DB_DIR)
+collection = client.get_or_create_collection("cyber_notes")
+```
+
+If you encounter errors related to deprecated Chroma configuration, update the ingestion script to use the newer API.
 
 ---
 
@@ -112,10 +248,22 @@ The ingestion script performs the following steps:
 python app/ingest.py
 ```
 
+If using a separate RAG build script:
+
+```bash
+python ~/cyber-llm/rag/build_rag.py
+```
+
 This generates the database inside:
 
 ```bash
 project/db/
+```
+
+A successful run should end with output similar to:
+
+```text
+Ingestion complete.
 ```
 
 ---
@@ -155,6 +303,47 @@ http://localhost:5000
 
 ---
 
+# Hardware Considerations
+
+This project does not require high-end hardware, but performance improves with additional memory.
+
+- Minimum recommended RAM: **8 GB**
+- Recommended RAM for smoother performance: **16 GB**
+- CPU: Any modern multi-core processor
+- Disk space: Approximately **10–15 GB** for Kali, notes, dependencies, and model storage
+
+Ollama and Llama 3 will run on systems with 8 GB RAM, but ingestion speed and model response times improve significantly with more memory.
+
+---
+
+# Notes Backup and Format Recommendations
+
+If you are ingesting personal notes (Obsidian vaults, Notion exports, OneNote pages, etc.), back them up before running the ingestion pipeline.
+
+The ingestion process does not modify the original files, but maintaining backups helps prevent accidental data loss or corruption.
+
+## Recommended Formats
+
+- Markdown (`.md`) — preferred format
+- Plain text (`.txt`)
+- PDF (`.pdf`) — supported, but parsing quality may vary
+
+## Exporting From Other Platforms
+
+### Obsidian
+
+Obsidian already uses Markdown format.
+
+### Notion
+
+Export notes using the **Markdown & CSV** option.
+
+### OneNote
+
+Export as PDF or manually convert notes to Markdown.
+
+---
+
 # Summary of Tools Used
 
 | Tool | Purpose |
@@ -163,6 +352,7 @@ http://localhost:5000
 | Python 3 | Scripting and backend logic |
 | Ollama | Local LLM runtime |
 | Llama 3 | Model used for answering questions |
-| ChromaDB | Lightweight text search database |
+| ChromaDB | Lightweight searchable vector database |
 | LangChain | Text splitting and retrieval helpers |
 | Flask | Optional web interface |
+| VMware / VirtualBox | Virtualization platform |
