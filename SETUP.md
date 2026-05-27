@@ -1,4 +1,3 @@
-````markdown
 # Technical Details
 
 This project was built and tested inside a Kali Linux virtual machine running on VMware. The setup includes installing system packages, configuring a Python environment, installing Ollama for local LLM inference, and preparing a directory structure for storing cybersecurity notes and running the ingestion pipeline.
