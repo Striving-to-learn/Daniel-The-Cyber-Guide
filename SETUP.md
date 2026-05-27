@@ -103,16 +103,22 @@ This confirms that the local LLM runtime is working correctly.
 
 ---
 
-# Project Directory Structure
+## Project Directory Structure
 
-A dedicated directory was created to store notes, scripts, databases, and model-related files.
-
-## Create the Directories
+Create the main folders:
 
 ```bash
-mkdir -p ~/cyber-llm/{notes,rag,training,models}
-mkdir -p ~/cyber-llm/notes/{obsidian,hacktricks,blue-team,red-team,resources}
+mkdir -p ~/cyber-llm/{notes,rag,web}
+mkdir -p ~/cyber-llm/rag/chroma
 ```
+
+Copy your markdown notes, lab writeups, and cybersecurity material into:
+
+```bash
+~/cyber-llm/notes/
+```
+
+This is the source folder used by the ingestion script.
 
 Cybersecurity notes, Obsidian vaults, and lab writeups should be copied into:
 
