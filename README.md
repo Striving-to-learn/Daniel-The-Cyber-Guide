@@ -14,32 +14,28 @@ The goal is to create a fast, offline‑friendly assistant for learning and revi
 - Optional minimal web interface for querying the model  
 
 ## Tech Stack
-- Kali Linux (VMware)
-- Python
-- Ollama (Llama 3)
+- Kali Linux (VMware or VirtualBox)
+- Python 3
+- Ollama
+- Llama 3
 - ChromaDB
-- LangChain (light use for splitting and retrieval)
+- LangChain text splitters
 - Flask (optional web UI)
 
 ## Project Structure
-project/
-│── data/                # Raw notes and writeups  
-│── processed/           # Cleaned and chunked text  
-│── db/                  # Searchable database files  
-│── app/  
-│   ├── ingest.py        # Reads, cleans, chunks, and stores data  
-│   ├── query.py         # Searches data and sends context to the LLM  
-│   ├── utils.py         # Helper functions  
-│── web/  
-│   ├── app.py           # Simple Flask UI  
-│   ├── templates/  
-│── README.md  
-│── SETUP.md             # Technical setup and commands  
+cyber-llm/
+│── notes/             # Raw cybersecurity notes and writeups
+│── rag/
+│   ├── chroma/        # ChromaDB persistent database
+│   ├── build_rag.py   # Ingests notes into ChromaDB
+│   └── query_rag.py   # Queries ChromaDB and sends context to Ollama
+│── web/
+│   └── app.py        # Optional Flask UI
+│── README.md
+│── SETUP.md
 
 ## How It Works
 The system loads your cybersecurity notes, breaks them into smaller readable sections, stores them in a searchable database, and uses a local LLM to answer questions based on the most relevant pieces of information. This creates a simple, offline‑capable assistant for reviewing and understanding security concepts.
 
 ## Documentation
-For installation steps, commands, and a deeper technical breakdown, see:
-
-SETUP.md
+For installation steps, commands, and technical details, see SETUP.md.
