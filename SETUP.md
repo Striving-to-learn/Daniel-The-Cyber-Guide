@@ -2,7 +2,7 @@
 
 This guide covers everything you need to install and run Daniel — The Cyber Guide inside a Kali Linux virtual machine. It includes system updates, VM tools, Ollama setup, Python environment configuration, directory structure, ingestion, querying, and common troubleshooting.
 
-All processing happens **locally**, and the assistant runs **fully offline** once installed.
+All processing happens locally, and the assistant runs fully offline once installed.
 ---
 
 ## Quick Overview
@@ -28,13 +28,12 @@ The project was developed and tested on **Kali Linux**, but it should also work 
 - Ubuntu
 - Debian
 - Pop!_OS,
--  Parrot OS (Security Edition).
+- Parrot OS (Security Edition).
 These systems share similar package managers and Python environments, so the installation steps are nearly identical.
 
 Kali Linux was chosen because it includes many cybersecurity tools out of the box. 
-Other distributions will also work, but they may not include the same preinstalled security utilities and might require additional installation steps.
+Other distributions will also work, but they may not include the same preinstalled security utilities and might require additional installation steps and configuration.
 
-Note: Parrot OS and other Debian-based distributions may package dependencies differently. Some commands or package names may require small adjustments depending on your OS version and repositories.
 
 ## System Updates
 Always start with a fresh and updated system:
@@ -98,7 +97,7 @@ Parrot Security Edition includes penetration testing tools similar to Kali and i
 
 ---
 
-# Local LLM Runtime (Ollama)
+## Local LLM Runtime (Ollama)
 
 Ollama is used to run Llama 3 locally.
 
@@ -108,19 +107,20 @@ Ollama is used to run Llama 3 locally.
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-## Download the Model
+### Download the Model
 
 ```bash
 ollama pull llama3
 ```
+This pulls Llama 3 8B. which is designed for 8B to be practical on home lab hardware. 
 
-## Test the Model
+### Test the Model
 
 ```bash
 ollama run llama3 "Hello from my Kali VM."
 ```
 
-This confirms that the local LLM runtime is working correctly.
+If you get a response, Ollama is working correctly.
 
 ---
 
@@ -141,11 +141,9 @@ Copy your markdown notes, lab writeups, and cybersecurity material into:
 
 This directory acts as the primary data source for ingestion.
 
-## Common Directory Issues
+### Common Directory Issues
 
-One common issue is attempting to access directories before they exist.
-
-Example:
+#### Directory Doesn't Exist
 
 ```bash
 ls -l ~/cyber-llm/rag
@@ -156,51 +154,53 @@ Possible error:
 ```text
 No such file or directory
 ```
+**Fix:** Re-run the `mkdir -p` commands:
+```bash
+mkdir -p ~/cyber-llm/{notes,rag,web}
+mkdir -p ~/cyber-llm/rag/chroma
+```
 
-This usually means the directory structure was not created yet. Re-run the `mkdir -p` commands shown earlier.
-
-Another common issue involves copying note directories from incorrect or non-existent paths.
-
-Example:
+#### Copying from Wrong Path
 
 ```bash
 cp -r "/path/to/notes" ~/cyber-llm/notes/obsidian/
 ```
 
-Possible error:
-
+**Error:**
 ```text
 cannot stat '/path/to/notes': No such file or directory
 ```
 
-This indicates the source directory path is incorrect or does not exist. Verify the source path before copying files.
-
+**Fix:** Verify the source path exists before copying:
+```bash
+ls "/path/to/notes"
+```
 ---
 
-# Python Environment
+## Python Environment
 
 A Python virtual environment was created to isolate dependencies and avoid conflicts with Kali Linux system packages.
 
-## Why a Virtual Environment Is Required
+### Why a Virtual Environment Is Required
 
 Kali Linux follows PEP 668 restrictions, which prevent many system-wide `pip` installations. Because of this, packages such as ChromaDB must be installed inside a Python virtual environment.
 
 This is expected behavior on modern Kali Linux systems.
 
-## Create and Activate the Virtual Environment
+### Create and Activate the Virtual Environment
 
 ```bash
 python3 -m venv ~/cyber-llm/venv
 source ~/cyber-llm/venv/bin/activate
 ```
 
-When activated, the shell prompt should change to something similar to:
+When activated, the shell prompt should change to:
 
 ```text
 (venv) kali@kali:~
 ```
 
-## Install Required Packages
+### Install Required Packages
 
 ```bash
 pip install chromadb langchain-text-splitters flask pypdf python-dotenv ollama
@@ -213,26 +213,22 @@ These packages support:
 - Running the ingestion and query scripts
 - Optional web interface
 
-## Common Python Dependency Errors
+### Common Python Dependency Errors
 
-### ChromaDB Not Installed
-
-Example:
+#### ChromaDB Not Installed
 
 ```bash
 python3 ~/cyber-llm/rag/build_rag.py
 ```
 
-Possible error:
-
+**Error:**
 ```text
 ModuleNotFoundError: No module named 'chromadb'
 ```
 
-This usually means the script was executed outside the virtual environment.
+**Fix:** This usually means the script was executed outside the virtual environment.
 
 Activate the virtual environment first:
-
 ```bash
 source ~/cyber-llm/venv/bin/activate
 ```
@@ -243,7 +239,7 @@ Then install dependencies:
 pip install chromadb
 ```
 
-### Missing langchain_text_splitters Module
+#### Missing langchain_text_splitters Module
 
 Possible error:
 
@@ -263,7 +259,7 @@ pip install langchain-text-splitters
 
 Recent ChromaDB releases introduced breaking API changes.
 
-Older tutorials may use deprecated client syntax such as:
+Older tutorials may use deprecated client syntax:
 
 ```python
 client = chromadb.Client(Settings(
@@ -291,7 +287,7 @@ If you see errors related to deprecated Chroma configuration, update your ingest
 
 ---
 
-# Ingestion Pipeline
+## Ingestion Pipeline
 
 The ingestion script performs the following steps:
 
@@ -300,9 +296,11 @@ The ingestion script performs the following steps:
 - Splits text into smaller chunks
 - Embeds chunks into vectors and stores them in ChromaDB
 
-## Run the Ingestion
+### Run the Ingestion
 
 ```bash
+cd ~/cyber-llm
+source venv/bin/activate
 python ~/cyber-llm/rag/build_rag.py
 ```
 
@@ -312,7 +310,7 @@ This generates the ChromaDB database inside:
 ~/cyber-llm/rag/chroma/
 ```
 
-A successful run should end with output similar to:
+A successful run should end with:
 
 ```text
 Ingestion complete.
@@ -320,17 +318,17 @@ Ingestion complete.
 
 ---
 
-# Query Pipeline
+## Query Pipeline
 
 The query script (`query_rag.py`):
 
 - Loads the ChromaDB database from `~/cyber-llm/rag/chroma/`
-- Embeds your query into a vector  
-- Retrieves relevant chunks from your notes
+- Embeds your query into a vector
+- Retrieves the most similar chunks using vector similarity
 - Sends them to Llama 3 via Ollama
 - Prints a context-aware answer
 
-## Run the Query Script (Interactive)
+### Run the Query Script (Interactive)
 
 ```bash
 cd ~/cyber-llm
@@ -346,7 +344,17 @@ RAG ready. Ask anything from your notes.
 Ask:
 ```
 
-Example questions:
+
+Most common use case questions:
+
+```text
+How did I solve the TryHackMe 'Jr Penetration Tester' path machines?
+What was the vulnerability in the HTB 'Lame' machine?
+How do I perform Kerberoasting again?
+What tools did I use for credential dumping in my last lab?
+How do I detect lateral movement from my notes?
+```
+Other Example questions:
 
 ```text
 Explain Kerberoasting
