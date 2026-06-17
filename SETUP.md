@@ -17,7 +17,9 @@ All processing happens **locally**, and the assistant runs **fully offline** onc
 7. Run the ingestion script (`build_rag.py`)  
 8. Run the query script (`query_rag.py`)  
 
-For a shorter version, see the **Quick Start** section in `README.md`.
+For a shorter version, see the **Quick Start** section in **[README.md](README.md)**.
+
+> **Note:** Additional testing on alternative platforms (Parrot OS, Pop!_OS, Debian, Ubuntu, VirtualBox) will be done in another phase of the project. See **[Future Project Phases](https://github.com/Striving-to-learn/Daniel-The-Cyber-Guide/blob/main/README.md#future-project-phases)** in the README for more details.
 
 ---
 
