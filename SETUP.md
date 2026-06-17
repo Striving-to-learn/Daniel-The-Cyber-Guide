@@ -1,23 +1,43 @@
-# Technical Details
+# SETUP.md - Full Installation and Technical Details
 
-This project was built and tested inside a Kali Linux virtual machine running on VMware. The setup includes installing system packages, configuring a Python environment, installing Ollama for local LLM inference, and preparing a directory structure for storing cybersecurity notes and running the ingestion pipeline.
+This guide covers everything you need to install and run Daniel — The Cyber Guide inside a Kali Linux virtual machine. It includes system updates, VM tools, Ollama setup, Python environment configuration, directory structure, ingestion, querying, and common troubleshooting.
 
-The system uses Python scripts to read notes, clean and split text, store them in a lightweight searchable database, and query them using a local LLM (Llama 3). All processing happens locally, and the assistant runs fully offline once installed.
-
+All processing happens **locally**, and the assistant runs **fully offline** once installed.
 ---
+
+## Quick Overview
+
+1. Update Kali Linux and install VM tools  
+2. Install Ollama and pull **Llama 3 8B**  
+3. Create the project directory structure  
+4. Set up a Python virtual environment  
+5. Install Python dependencies  
+6. Copy your notes into `~/cyber-llm/notes/`  
+7. Run the ingestion script (`build_rag.py`)  
+8. Run the query script (`query_rag.py`)  
+
+For a shorter version, see the **Quick Start** section in `README.md`.
+
 
 # Operating System and Environment
 
 **OS:** Kali Linux (VMware or VirtualBox)
 
-The project was developed and tested on **Kali Linux**, but it should also work on other Debian‑based distributions such as **Ubuntu, Debian, Pop!_OS, and Parrot OS**. These systems share similar package managers and Python environments, so the installation steps are nearly identical.
+The project was developed and tested on **Kali Linux**, but it should also work on other Debian‑based distributions:
 
-Kali Linux was chosen because it includes many cybersecurity tools out of the box. Other distributions will work, but they may not include the same preinstalled security utilities.
+- Ubuntu
+- Debian
+- Pop!_OS,
+-  Parrot OS (Security Edition).
+These systems share similar package managers and Python environments, so the installation steps are nearly identical.
 
-Because Parrot OS and other Debian‑based distributions may package dependencies differently, some commands or package names may require small adjustments depending on the operating system version and installed repositories. Older or heavily modified Kali or Parrot installations may also require additional manual configuration due to outdated Python layers or older package versions.
+Kali Linux was chosen because it includes many cybersecurity tools out of the box. 
+Other distributions will also work, but they may not include the same preinstalled security utilities and might require additional installation steps.
+
+Note: Parrot OS and other Debian-based distributions may package dependencies differently. Some commands or package names may require small adjustments depending on your OS version and repositories.
 
 ## System Updates
-
+Always start with a fresh and updated system:
 ```bash
 sudo apt update && sudo apt full-upgrade -y
 ```
@@ -74,7 +94,8 @@ OVA — optimized for VirtualBox
 
 VMDK — optimized for VMware
 
-The Parrot Security Edition includes penetration testing tools similar to Kali and is fully compatible with this project. Installation steps are nearly identical to Kali because Parrot is also Debian‑based. 
+Parrot Security Edition includes penetration testing tools similar to Kali and is fully compatible with this project. 
+
 ---
 
 # Local LLM Runtime (Ollama)
@@ -238,7 +259,7 @@ pip install langchain-text-splitters
 
 ---
 
-# ChromaDB Compatibility Notes
+## ChromaDB Compatibility Notes
 
 Recent ChromaDB releases introduced breaking API changes.
 
@@ -259,8 +280,14 @@ from chromadb import PersistentClient
 client = PersistentClient(path=DB_DIR)
 collection = client.get_or_create_collection("cyber_notes")
 ```
-Make sure both `build_rag.py` and `query_rag.py` use `get_or_create_collection()` or `get_collection()` consistently, and that the collection name is `"cyber_notes"` in both scripts.
-If you encounter errors related to deprecated Chroma configuration, update the ingestion script to use the newer API.
+
+Make sure both `build_rag.py` and `query_rag.py`:
+
+- Use `PersistentClient`  
+- Use `get_or_create_collection()` or `get_collection()` consistently  
+- Use the collection name `"cyber_notes"` in both scripts
+
+If you see errors related to deprecated Chroma configuration, update your ingestion script to use the newer API.
 
 ---
 
@@ -271,7 +298,7 @@ The ingestion script performs the following steps:
 - Reads raw markdown notes from `~/cyber-llm/notes/`
 - Cleans and normalizes text
 - Splits text into smaller chunks
-- Stores chunks in a searchable database (ChromaDB)
+- Embeds chunks into vectors and stores them in ChromaDB
 
 ## Run the Ingestion
 
@@ -295,9 +322,10 @@ Ingestion complete.
 
 # Query Pipeline
 
-The query script:
+The query script (`query_rag.py`):
 
 - Loads the ChromaDB database from `~/cyber-llm/rag/chroma/`
+- Embeds your query into a vector  
 - Retrieves relevant chunks from your notes
 - Sends them to Llama 3 via Ollama
 - Prints a context-aware answer
@@ -305,6 +333,8 @@ The query script:
 ## Run the Query Script (Interactive)
 
 ```bash
+cd ~/cyber-llm
+source venv/bin/activate
 python ~/cyber-llm/rag/query_rag.py
 ```
 
@@ -330,11 +360,13 @@ How do I detect lateral movement?
 
 # Optional Web Interface
 
-## Start the Web Interface
+## Start the Web UI 
+Ensure you're in the project root and the virtual environment is active:
 
-Make sure you are in the project root and the virtual environment is activated, then:
 
 ```bash
+cd ~/cyber-llm
+source venv/bin/activate
 python web/app.py
 ```
 
@@ -353,17 +385,18 @@ This project does not require high-end hardware, but performance improves with a
 - Minimum recommended RAM: **8 GB**
 - Recommended RAM for smoother performance: **16 GB**
 - CPU: Any modern multi-core processor
-- Disk space: Approximately **10–15 GB** for Kali, notes, dependencies, and model storage
+- Disk: Approximately **10–15 GB** for Kali, notes, dependencies, and model storage
 
-Ollama and Llama 3 will run on systems with 8 GB RAM, but ingestion speed and model response times improve significantly with more memory.
+Llama 3 8B will run on 8 GB RAM, but ingestion speed and model response times improve significantly with more memory.
 
 ---
 
 # Notes Backup and Format Recommendations
 
-If you are ingesting personal notes (Obsidian vaults, Notion exports, OneNote pages, etc.), back them up before running the ingestion pipeline.
+Before ingesting personal notes:
 
-The ingestion process does not modify the original files, but maintaining backups helps prevent accidental data loss or corruption.
+- Back up your notes (Obsidian vaults, Notion exports, OneNote pages, etc.)  
+- The ingestion process does **not** modify original files, but backups prevent accidental data loss.
 
 ## Recommended Formats
 
@@ -371,31 +404,23 @@ The ingestion process does not modify the original files, but maintaining backup
 - Plain text (`.txt`)
 - PDF (`.pdf`) — supported, but parsing quality may vary
 
-## Exporting From Other Platforms
+### Exporting From Other Platforms
 
-### Obsidian
-
-Obsidian already uses Markdown format.
-
-### Notion
-
-Export notes using the **Markdown & CSV** option.
-
-### OneNote
-
-Export as PDF or manually convert notes to Markdown.
+- **Obsidian:** Already Markdown  
+- **Notion:** Export as **Markdown & CSV**  
+- **OneNote:** Export as PDF or convert to Markdown manually
 
 ---
 
-# Summary of Tools Used
+## Summary of Tools Used
 
-| Tool | Purpose |
-|---|---|
-| Kali Linux | Development environment |
-| Python 3 | Scripting and backend logic |
-| Ollama | Local LLM runtime |
-| Llama 3 | Model used for answering questions |
-| ChromaDB | Lightweight searchable vector database |
-| LangChain | Text splitting and retrieval helpers |
-| Flask | Optional web interface |
-| VMware / VirtualBox | Virtualization platform |
+| Tool          | Purpose                                 |
+|---------------|-----------------------------------------|
+| Kali Linux    | Development environment                 |
+| Python 3      | Scripting and backend logic             |
+| Ollama        | Local LLM runtime                       |
+| Llama 3 8B    | Model used for answering questions      |
+| ChromaDB      | Lightweight searchable vector database  |
+| LangChain     | Text splitting and retrieval helpers    |
+| Flask         | Optional web interface                  |
+| VMware / VB   | Virtualization platform                 |
