@@ -1,15 +1,16 @@
-# Daniel The Cyber Guide
+# Daniel — The Cyber Guide
 
-Daniel (The Cyber Guide) is a local, offline AI assistant that lets you query your cybersecurity notes, HackTheBox / TryHackMe / CTF writeups, study material, and lab documentation using a local LLM (Llama 3 8B via Ollama). 
+Daniel (The Cyber Guide) is a local, offline AI assistant that lets you query your cybersecurity notes, HackTheBox / TryHackMe / CTF writeups, study material, and lab documentation using a local LLM (**Llama 3 8B** via Ollama).
 
-It uses a lightweight RAG-style pipeline: chunk all your notes, embed them into vectors, store them in ChromaDB, retrieve the relevant chunks, and inject them into the LLM prompt.
+It uses a lightweight RAG-style pipeline: chunk all your notes, **embed them into vectors**, store them in ChromaDB, retrieve relevant chunks using **vector similarity**, and inject them into the LLM prompt. This gives you context-aware answers based on your own cybersecurity material, with everything running locally on Kali Linux.
 
-This gives you context-aware answers based on your own cybersecurity material, with everything running locally on Kali Linux.  
+The goal: a fast, offline-capable assistant for learning and reviewing cybersecurity concepts.
 
 Everything runs locally on Kali Linux. No internet required after setup.
 
-Get started here: **[SETUP.md](SETUP.md)** For the  full installation, OS options, VM tools, and troubleshooting
+ **Get started here:** **[SETUP.md](SETUP.md)** *(Full installation, OS options, VM tools, FAQs, and troubleshooting)*
 
+---
 
 ## Quick Start
 
@@ -23,7 +24,7 @@ Get started here: **[SETUP.md](SETUP.md)** For the  full installation, OS option
    ```bash
    mkdir -p ~/cyber-llm/{notes,rag,web}
    mkdir -p ~/cyber-llm/rag/chroma
-   # Copy your markdown/.txt/.pdf notes into ~/cyber-llm/notes/
+   # Copy your Markdown/.txt/.pdf notes into ~/cyber-llm/notes/
    ```
 
 3. **Set up Python and install dependencies**
@@ -44,47 +45,51 @@ Get started here: **[SETUP.md](SETUP.md)** For the  full installation, OS option
    python rag/query_rag.py
    ```
 
-👉 **For full installation steps, OS options, VM tools, FAQS and troubleshooting, see the detailed guide:**  
+ **For full installation steps, OS options, VM tools, FAQs, and troubleshooting, see the detailed guide:**  
 **[SETUP.md](SETUP.md)**
 
-## What This Is (and Isn’t)
+---
 
-This is a lightweight RAG-style pipeline: chunk your notes, embed them, store in ChromaDB, retrieve relevant chunks, and inject them into the LLM prompt. Knowledge lives in ChromaDB, not in the model.
+## What This Is (and Isn't)
 
-This is not model training or fine-tuning. The LLM does not learn your notes, its weights never change, and when context is removed, that information is gone for that request.
+This is a **lightweight RAG-style pipeline**: chunk your notes, embed them into vectors, store in ChromaDB, retrieve relevant chunks using vector similarity, and inject them into the LLM prompt. Knowledge lives in **ChromaDB**, not in the model.
 
-Built for small-to-medium personal datasets (notes, labs, writeups), not enterprise. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
+This is **not** model training or fine-tuning. The LLM does **not learn** your notes, its weights never change, and when context is removed, that information is gone for that request.
 
+Built for **small-to-medium personal datasets** (notes, labs, writeups), not enterprise. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
+
+For a more production-grade cybersecurity RAG architecture:  
+- https://github.com/simeononsecurity/sos-cyber-rag
+
+---
 
 ## Features
-- Reads cybersecurity notes and lab writeups ( from Markdown, txt`, pdf files)  
+
+- Reads cybersecurity notes and lab writeups (from Markdown, `.txt`, `.pdf` files)  
 - Breaks content into smaller chunks for easier searching  
-- Stores information in a lightweight, persistent vector database (ChromaDB)  
-- Runs a local LLM (Llama 3 8B via Ollama)  
+- Stores information in a lightweight, persistent **vector database** (ChromaDB)  
+- Runs a local LLM (**Llama 3 8B** via Ollama)  
 - Provides context-aware answers using a simple retrieval workflow  
 - Includes Python scripts for loading data (`build_rag.py`) and asking questions (`query_rag.py`)  
 - Optional minimal web interface for querying the model (Flask)
 
+---
+
 ## Tech Stack
-- OS: Kali Linux (VMware or VirtualBox)  
+
+- **OS:** Kali Linux (VMware or VirtualBox)  
   - Also works on Ubuntu, Debian, Pop!_OS, Parrot OS (Debian-based)
-- Language: Python 3
-- LLM Runtime: Ollama
-- Model: Llama 3 (8B)
-- Vector DB: ChromaDB (persistent)
-- Text Splitters: LangChain text splitters
-- Web UI (optional): Flask
+- **Language:** Python 3
+- **LLM Runtime:** Ollama
+- **Model:** Llama 3 **(8B)**
+- **Vector DB:** ChromaDB (persistent, with embeddings)
+- **Text Splitters:** LangChain text splitters
+- **Web UI (optional):** Flask
+
+---
 
 ## Project Structure
-```cyber-llm/
-│── notes/             # Raw cybersecurity notes and writeups
-│── rag/
-│   ├── chroma/        # ChromaDB persistent database
-│   ├── build_rag.py   # Ingests notes into ChromaDB
-│   └── query_rag.py   # Queries ChromaDB and sends context to Ollama
-│── web/
-│   └── app.py        # Optional Flask UI
-│── README.md
-│── SETUP.md
-```
 
+```text
+cyber-llm/
+│── notes/             # Raw cybersecurity notes and 
