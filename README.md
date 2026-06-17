@@ -89,4 +89,13 @@ Built for **small-to-medium personal datasets** (notes, labs, writeups), not ent
 
 ```text
 cyber-llm/
-│── notes/             # Raw cybersecurity notes and 
+│── notes/             # Raw cybersecurity notes and writeups
+│── rag/
+│   ├── chroma/        # ChromaDB persistent database
+│   ├── build_rag.py   # Ingests notes into ChromaDB
+│   └── query_rag.py   # Queries ChromaDB and sends context to Ollama
+│── web/
+│   └── app.py         # Optional Flask UI
+│── README.md
+│── SETUP.md
+```
