@@ -1,8 +1,9 @@
-# SETUP.md - Full Installation and Technical Details
+# SETUP.md — Full Installation & Technical Details
 
-This guide covers everything you need to install and run Daniel — The Cyber Guide inside a Kali Linux virtual machine. It includes system updates, VM tools, Ollama setup, Python environment configuration, directory structure, ingestion, querying, and common troubleshooting.
+This guide covers everything you need to install and run **Daniel — The Cyber Guide** inside a Kali Linux virtual machine. It includes system updates, VM tools, Ollama setup, Python environment configuration, directory structure, ingestion, querying, and common troubleshooting.
 
-All processing happens locally, and the assistant runs fully offline once installed.
+All processing happens **locally**, and the assistant runs **fully offline** once installed.
+
 ---
 
 ## Quick Overview
@@ -18,32 +19,38 @@ All processing happens locally, and the assistant runs fully offline once instal
 
 For a shorter version, see the **Quick Start** section in `README.md`.
 
+---
 
-# Operating System and Environment
+## Operating System and Environment
 
 **OS:** Kali Linux (VMware or VirtualBox)
 
-The project was developed and tested on **Kali Linux**, but it should also work on other Debian‑based distributions:
+This project was developed and tested on **Kali Linux**, but it should also work on other Debian-based distributions:
 
 - Ubuntu
 - Debian
-- Pop!_OS,
-- Parrot OS (Security Edition).
+- Pop!_OS
+- Parrot OS (Security Edition)
+
 These systems share similar package managers and Python environments, so the installation steps are nearly identical.
 
-Kali Linux was chosen because it includes many cybersecurity tools out of the box. 
-Other distributions will also work, but they may not include the same preinstalled security utilities and might require additional installation steps and configuration.
+Kali Linux was chosen because it includes many cybersecurity tools out of the box. Other distributions will also work, but they may not include the same preinstalled security utilities and might require additional installation steps and configuration.
 
+---
 
 ## System Updates
+
 Always start with a fresh and updated system:
+
 ```bash
 sudo apt update && sudo apt full-upgrade -y
 ```
 
+---
+
 ## VMware Tools
 
-If using VMware, install the VMware guest tools for better display scaling, clipboard sharing, and VM integration.
+If using VMware, install the VMware guest tools for better display scaling, clipboard sharing, and VM integration:
 
 ```bash
 sudo apt install -y open-vm-tools open-vm-tools-desktop
@@ -51,49 +58,47 @@ sudo apt install -y open-vm-tools open-vm-tools-desktop
 
 This project was personally built and tested using VMware.
 
+---
+
 ## VirtualBox Guest Additions
 
-If using VirtualBox, install the VirtualBox guest additions for improved VM support and desktop integration.
+If using VirtualBox, install the VirtualBox guest additions for improved VM support and desktop integration:
 
 ```bash
 sudo apt install -y virtualbox-guest-x11 virtualbox-guest-utils virtualbox-guest-dkms
 ```
+
+---
 
 ## Choosing the Correct OS Image
 
 You can install Kali Linux or Parrot OS (Security Edition) using either a standard ISO or a prebuilt virtual machine image. Prebuilt images are generally faster and easier to configure because many settings and drivers are already prepared.
 
 ### Kali Linux Images
-Kali Linux images can be downloaded from:
 
-https://www.kali.org/get-kali/#kali-platforms
+Download from: https://www.kali.org/get-kali/#kali-platforms
 
-You can choose between:
+Available options:
 
-Installer Images — traditional ISO files used for manual installation
+- **Installer Images** — traditional ISO files for manual installation
+- **Virtual Machines** — prebuilt VMware and VirtualBox images
 
-Virtual Machines — prebuilt VMware and VirtualBox images
-
-If you want a standard ISO installer, select the Installer Images section.
-
-If you want a preconfigured virtual machine, select the Virtual Machines section and download either the VMware or VirtualBox image.
+For a standard ISO installer: select **Installer Images**.  
+For a preconfigured VM: select **Virtual Machines** and download either VMware or VirtualBox image.
 
 Prebuilt VM images are typically the fastest option because they include optimized drivers and preconfigured settings.
 
 ### Parrot OS (Security Edition) Images
-Parrot OS Security Edition can be downloaded from:
 
-https://parrotsec.org/download/
+Download from: https://parrotsec.org/download/
 
-Available formats include:
+Available formats:
 
-ISO — for bare metal, laptops, desktops, or manual VM installation
+- **ISO** — for bare metal, laptops, desktops, or manual VM installation
+- **OVA** — optimized for VirtualBox
+- **VMDK** — optimized for VMware
 
-OVA — optimized for VirtualBox
-
-VMDK — optimized for VMware
-
-Parrot Security Edition includes penetration testing tools similar to Kali and is fully compatible with this project. 
+Parrot Security Edition includes penetration testing tools similar to Kali and is fully compatible with this project.
 
 ---
 
@@ -101,7 +106,7 @@ Parrot Security Edition includes penetration testing tools similar to Kali and i
 
 Ollama is used to run Llama 3 locally.
 
-## Install Ollama
+### Install Ollama
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
@@ -112,7 +117,8 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```bash
 ollama pull llama3
 ```
-This pulls Llama 3 8B. which is designed for 8B to be practical on home lab hardware. 
+
+> This pulls **Llama 3 8B**, which is designed to be practical on home lab hardware.
 
 ### Test the Model
 
@@ -149,11 +155,11 @@ This directory acts as the primary data source for ingestion.
 ls -l ~/cyber-llm/rag
 ```
 
-Possible error:
-
+**Error:**
 ```text
 No such file or directory
 ```
+
 **Fix:** Re-run the `mkdir -p` commands:
 ```bash
 mkdir -p ~/cyber-llm/{notes,rag,web}
@@ -175,15 +181,16 @@ cannot stat '/path/to/notes': No such file or directory
 ```bash
 ls "/path/to/notes"
 ```
+
 ---
 
 ## Python Environment
 
-A Python virtual environment was created to isolate dependencies and avoid conflicts with Kali Linux system packages.
+A Python virtual environment isolates dependencies and avoids conflicts with Kali Linux system packages.
 
 ### Why a Virtual Environment Is Required
 
-Kali Linux follows PEP 668 restrictions, which prevent many system-wide `pip` installations. Because of this, packages such as ChromaDB must be installed inside a Python virtual environment.
+Kali Linux follows **PEP 668** restrictions, which prevent many system-wide `pip` installations. Packages like ChromaDB must be installed inside a Python virtual environment.
 
 This is expected behavior on modern Kali Linux systems.
 
@@ -234,21 +241,18 @@ source ~/cyber-llm/venv/bin/activate
 ```
 
 Then install dependencies:
-
 ```bash
 pip install chromadb
 ```
 
 #### Missing langchain_text_splitters Module
 
-Possible error:
-
+**Error:**
 ```text
 ModuleNotFoundError: No module named 'langchain_text_splitters'
 ```
 
-Fix by installing the package:
-
+**Fix:**
 ```bash
 pip install langchain-text-splitters
 ```
@@ -279,8 +283,8 @@ collection = client.get_or_create_collection("cyber_notes")
 
 Make sure both `build_rag.py` and `query_rag.py`:
 
-- Use `PersistentClient`  
-- Use `get_or_create_collection()` or `get_collection()` consistently  
+- Use `PersistentClient`
+- Use `get_or_create_collection()` or `get_collection()` consistently
 - Use the collection name `"cyber_notes"` in both scripts
 
 If you see errors related to deprecated Chroma configuration, update your ingestion script to use the newer API.
@@ -289,28 +293,28 @@ If you see errors related to deprecated Chroma configuration, update your ingest
 
 ## Ingestion Pipeline
 
-The ingestion script performs the following steps:
+The ingestion script (`build_rag.py`):
 
 - Reads raw markdown notes from `~/cyber-llm/notes/`
 - Cleans and normalizes text
 - Splits text into smaller chunks
-- Embeds chunks into vectors and stores them in ChromaDB
+- **Embeds chunks into vectors** and stores them in ChromaDB
 
 ### Run the Ingestion
 
 ```bash
 cd ~/cyber-llm
 source venv/bin/activate
-python ~/cyber-llm/rag/build_rag.py
+python rag/build_rag.py
 ```
 
-This generates the ChromaDB database inside:
+This generates the ChromaDB database in:
 
 ```bash
 ~/cyber-llm/rag/chroma/
 ```
 
-A successful run should end with:
+A successful run ends with:
 
 ```text
 Ingestion complete.
@@ -323,8 +327,8 @@ Ingestion complete.
 The query script (`query_rag.py`):
 
 - Loads the ChromaDB database from `~/cyber-llm/rag/chroma/`
-- Embeds your query into a vector
-- Retrieves the most similar chunks using vector similarity
+- **Embeds your query** into a vector
+- **Retrieves the most similar chunks** using vector similarity
 - Sends them to Llama 3 via Ollama
 - Prints a context-aware answer
 
@@ -333,7 +337,7 @@ The query script (`query_rag.py`):
 ```bash
 cd ~/cyber-llm
 source venv/bin/activate
-python ~/cyber-llm/rag/query_rag.py
+python rag/query_rag.py
 ```
 
 You will see:
@@ -344,8 +348,7 @@ RAG ready. Ask anything from your notes.
 Ask:
 ```
 
-
-Most common use case questions:
+**Most common use case questions:**
 
 ```text
 How did I solve the TryHackMe 'Jr Penetration Tester' path machines?
@@ -354,7 +357,8 @@ How do I perform Kerberoasting again?
 What tools did I use for credential dumping in my last lab?
 How do I detect lateral movement from my notes?
 ```
-Other Example questions:
+
+**Other example questions:**
 
 ```text
 Explain Kerberoasting
@@ -364,13 +368,11 @@ How do I detect lateral movement?
 
 ---
 
----
+## Optional Web UI
 
-# Optional Web Interface
+### Start the Web Interface
 
-## Start the Web UI 
 Ensure you're in the project root and the virtual environment is active:
-
 
 ```bash
 cd ~/cyber-llm
@@ -386,36 +388,36 @@ http://localhost:5000
 
 ---
 
-# Hardware Considerations
+## Hardware Considerations
 
-This project does not require high-end hardware, but performance improves with additional memory.
+This project does not require high-end hardware, but performance improves with additional memory:
 
-- Minimum recommended RAM: **8 GB**
-- Recommended RAM for smoother performance: **16 GB**
-- CPU: Any modern multi-core processor
-- Disk: Approximately **10–15 GB** for Kali, notes, dependencies, and model storage
+- **Minimum recommended RAM:** 8 GB
+- **Recommended RAM for smoother performance:** 16 GB
+- **CPU:** Any modern multi-core processor
+- **Disk:** Approximately 10–15 GB for Kali, notes, dependencies, and model storage
 
-Llama 3 8B will run on 8 GB RAM, but ingestion speed and model response times improve significantly with more memory.
+**Llama 3 8B** will run on 8 GB RAM, but ingestion speed and model response times improve significantly with more memory.
 
 ---
 
-# Notes Backup and Format Recommendations
+## Notes Backup and Format Recommendations
 
 Before ingesting personal notes:
 
-- Back up your notes (Obsidian vaults, Notion exports, OneNote pages, etc.)  
+- **Back up your notes** (Obsidian vaults, Notion exports, OneNote pages, etc.)
 - The ingestion process does **not** modify original files, but backups prevent accidental data loss.
 
-## Recommended Formats
+### Recommended Formats
 
-- Markdown (`.md`) — preferred format
+- Markdown (`.md`) — preferred
 - Plain text (`.txt`)
 - PDF (`.pdf`) — supported, but parsing quality may vary
 
 ### Exporting From Other Platforms
 
-- **Obsidian:** Already Markdown  
-- **Notion:** Export as **Markdown & CSV**  
+- **Obsidian:** Already Markdown
+- **Notion:** Export as **Markdown & CSV**
 - **OneNote:** Export as PDF or convert to Markdown manually
 
 ---
