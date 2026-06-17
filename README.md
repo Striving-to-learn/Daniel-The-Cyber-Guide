@@ -67,6 +67,14 @@ Get started here: **[SETUP.md](SETUP.md)** For the  full installation, OS option
 - Text Splitters: LangChain text splitters
 - Web UI (optional): Flask
 
+## What This Is (and Isn’t)
+
+This is a lightweight RAG-style pipeline: chunk your notes, embed them, store in ChromaDB, retrieve relevant chunks, and inject them into the LLM prompt. Knowledge lives in ChromaDB, not in the model.
+
+This is not model training or fine-tuning. The LLM does not learn your notes, its weights never change, and when context is removed, that information is gone for that request.
+
+Built for small-to-medium personal datasets (notes, labs, writeups), not enterprise. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
+
 ## Project Structure
 ```cyber-llm/
 │── notes/             # Raw cybersecurity notes and writeups
