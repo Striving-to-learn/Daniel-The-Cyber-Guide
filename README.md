@@ -1,30 +1,71 @@
 # Daniel The Cyber Guide
 
-Daniel (the Cyber Guide) is a local AI assistant that reads cybersecurity notes, HackTheBox writeups, TryHackMe material, and personal lab documentation. 
+Daniel (The Cyber Guide) is a local, offline AI assistant that lets you query your cybersecurity notes, HackTheBox / TryHackMe / CTF writeups, study material, and lab documentation using a local LLM (Llama 3 8B via Ollama).  
+It uses a lightweight RAG-style pipeline: chunk all your notes, store them in ChromaDB, retrieve the relevant chunks, and inject them into the LLM prompt.
 
-It organizes the information so a local LLM can answer security questions with relevant context. 
+This gives you context-aware answers based on your own cybersecurity material, with everything running locally on Kali Linux.  
+The goal: a fast, offline-capable assistant for learning and reviewing cybersecurity concepts.
 
-The project was built in a Kali Linux home lab using Python, Ollama, and a small text‑search database.
+Everything runs locally on Kali Linux. No internet required after setup.
 
-The goal is to create a fast, offline‑friendly assistant for learning and reviewing cybersecurity topics.
+Get started here: **[SETUP.md](SETUP.md)** For the  full installation, OS options, VM tools, and troubleshooting
+
+
+## Quick Start
+
+1. **Install Ollama and pull the model**
+   ```bash
+   curl -fsSL https://ollama.com/install.sh | sh
+   ollama pull llama3
+   ```
+
+2. **Create the project directory and add notes**
+   ```bash
+   mkdir -p ~/cyber-llm/{notes,rag,web}
+   mkdir -p ~/cyber-llm/rag/chroma
+   # Copy your markdown/.txt/.pdf notes into ~/cyber-llm/notes/
+   ```
+
+3. **Set up Python and install dependencies**
+   ```bash
+   cd ~/cyber-llm
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install chromadb langchain-text-splitters flask pypdf python-dotenv ollama
+   ```
+
+4. **Build the RAG database**
+   ```bash
+   python rag/build_rag.py
+   ```
+
+5. **Start querying**
+   ```bash
+   python rag/query_rag.py
+   ```
+
+👉 **For full installation steps, OS options, VM tools, FAQS and troubleshooting, see the detailed guide:**  
+**[SETUP.md](SETUP.md)**
+
 
 ## Features
-- Reads cybersecurity notes and lab writeups  
-- Breaks content into smaller pieces for easier searching  
-- Stores information in a lightweight searchable database  
-- Runs a local LLM (Llama 3 via Ollama)  
-- Provides context‑aware answers using a simple retrieval workflow  
-- Includes Python scripts for loading data and asking questions  
-- Optional minimal web interface for querying the model  
+- Reads cybersecurity notes and lab writeups ( from Markdown, txt`, pdf files)  
+- Breaks content into smaller chunks for easier searching  
+- Stores information in a lightweight, persistent vector database (ChromaDB)  
+- Runs a local LLM (Llama 3 8B via Ollama)  
+- Provides context-aware answers using a simple retrieval workflow  
+- Includes Python scripts for loading data (`build_rag.py`) and asking questions (`query_rag.py`)  
+- Optional minimal web interface for querying the model (Flask)
 
 ## Tech Stack
-- Kali Linux (VMware or VirtualBox)
-- Python 3
-- Ollama
-- Llama 3
-- ChromaDB
-- LangChain text splitters
-- Flask (optional web UI)
+- OS: Kali Linux (VMware or VirtualBox)  
+  - Also works on Ubuntu, Debian, Pop!_OS, Parrot OS (Debian-based)
+- Language: Python 3
+- LLM Runtime: Ollama
+- Model: Llama 3 (8B)
+- Vector DB: ChromaDB (persistent)
+- Text Splitters: LangChain text splitters
+- Web UI (optional): Flask
 
 ## Project Structure
 ```cyber-llm/
@@ -38,9 +79,4 @@ The goal is to create a fast, offline‑friendly assistant for learning and revi
 │── README.md
 │── SETUP.md
 ```
-## How It Works
-The system loads your cybersecurity notes, breaks them into smaller readable sections, stores them in a searchable database, and uses a local LLM to answer questions based on the most relevant pieces of information.
-This creates a simple, offline‑capable assistant for reviewing and understanding security concepts.
 
-## Documentation
-For installation steps, commands, and technical details, see SETUP.md.
