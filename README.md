@@ -47,9 +47,14 @@ Get started here: **[SETUP.md](SETUP.md)** For the  full installation, OS option
 👉 **For full installation steps, OS options, VM tools, FAQS and troubleshooting, see the detailed guide:**  
 **[SETUP.md](SETUP.md)**
 
-**What this is:** A fast, offline-capable assistant for learning and reviewing cybersecurity concepts. Knowledge lives in **ChromaDB**, not in the model. Built for **small-to-medium personal datasets** (notes, labs, writeups), not enterprise.
+## What This Is (and Isn’t)
 
-**What this is not:** This is **not** model training or fine-tuning. The LLM does **not learn** your notes, its weights never change, and when context is removed, that information is gone for that request. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
+This is a lightweight RAG-style pipeline: chunk your notes, embed them, store in ChromaDB, retrieve relevant chunks, and inject them into the LLM prompt. Knowledge lives in ChromaDB, not in the model.
+
+This is not model training or fine-tuning. The LLM does not learn your notes, its weights never change, and when context is removed, that information is gone for that request.
+
+Built for small-to-medium personal datasets (notes, labs, writeups), not enterprise. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
+
 
 ## Features
 - Reads cybersecurity notes and lab writeups ( from Markdown, txt`, pdf files)  
@@ -69,14 +74,6 @@ Get started here: **[SETUP.md](SETUP.md)** For the  full installation, OS option
 - Vector DB: ChromaDB (persistent)
 - Text Splitters: LangChain text splitters
 - Web UI (optional): Flask
-
-## What This Is (and Isn’t)
-
-This is a lightweight RAG-style pipeline: chunk your notes, embed them, store in ChromaDB, retrieve relevant chunks, and inject them into the LLM prompt. Knowledge lives in ChromaDB, not in the model.
-
-This is not model training or fine-tuning. The LLM does not learn your notes, its weights never change, and when context is removed, that information is gone for that request.
-
-Built for small-to-medium personal datasets (notes, labs, writeups), not enterprise. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
 
 ## Project Structure
 ```cyber-llm/
