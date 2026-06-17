@@ -1,10 +1,10 @@
 # Daniel The Cyber Guide
 
-Daniel (The Cyber Guide) is a local, offline AI assistant that lets you query your cybersecurity notes, HackTheBox / TryHackMe / CTF writeups, study material, and lab documentation using a local LLM (Llama 3 8B via Ollama).  
-It uses a lightweight RAG-style pipeline: chunk all your notes, store them in ChromaDB, retrieve the relevant chunks, and inject them into the LLM prompt.
+Daniel (The Cyber Guide) is a local, offline AI assistant that lets you query your cybersecurity notes, HackTheBox / TryHackMe / CTF writeups, study material, and lab documentation using a local LLM (Llama 3 8B via Ollama). 
+
+It uses a lightweight RAG-style pipeline: chunk all your notes, embed them into vectors, store them in ChromaDB, retrieve the relevant chunks, and inject them into the LLM prompt.
 
 This gives you context-aware answers based on your own cybersecurity material, with everything running locally on Kali Linux.  
-The goal: a fast, offline-capable assistant for learning and reviewing cybersecurity concepts.
 
 Everything runs locally on Kali Linux. No internet required after setup.
 
@@ -47,6 +47,9 @@ Get started here: **[SETUP.md](SETUP.md)** For the  full installation, OS option
 👉 **For full installation steps, OS options, VM tools, FAQS and troubleshooting, see the detailed guide:**  
 **[SETUP.md](SETUP.md)**
 
+**What this is:** A fast, offline-capable assistant for learning and reviewing cybersecurity concepts. Knowledge lives in **ChromaDB**, not in the model. Built for **small-to-medium personal datasets** (notes, labs, writeups), not enterprise.
+
+**What this is not:** This is **not** model training or fine-tuning. The LLM does **not learn** your notes, its weights never change, and when context is removed, that information is gone for that request. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
 
 ## Features
 - Reads cybersecurity notes and lab writeups ( from Markdown, txt`, pdf files)  
