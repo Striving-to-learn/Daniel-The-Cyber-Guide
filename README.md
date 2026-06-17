@@ -6,7 +6,7 @@ It uses a lightweight RAG-style pipeline: chunk all your notes, **embed them int
 
 The goal: a fast, offline-capable assistant for learning and reviewing cybersecurity concepts.
 
-Everything runs locally on Kali Linux. No internet required after setup.
+**Purpose:** Provide cybersecurity guidance, teach better penetration testing skills, and help analyze prior engagements/labs. Everything runs locally on Kali Linux. No internet required after setup.
 
  **Get started here:** **[SETUP.md](SETUP.md)** *(Full installation, OS options, VM tools, FAQs, and troubleshooting)*
 
@@ -58,6 +58,9 @@ This is **not** model training or fine-tuning. The LLM does **not learn** your n
 
 Built for **small-to-medium personal datasets** (notes, labs, writeups), not enterprise. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
 
+For a more production-grade cybersecurity RAG architecture:  
+- https://github.com/simeononsecurity/sos-cyber-rag
+
 ---
 
 ## Features
@@ -74,8 +77,8 @@ Built for **small-to-medium personal datasets** (notes, labs, writeups), not ent
 
 ## Tech Stack
 
-- **OS:** Kali Linux (VMware or VirtualBox)  
-  - Also works on Ubuntu, Debian, Pop!_OS, Parrot OS (Debian-based)
+- OS: Kali Linux (VMware or VirtualBox)  
+  - Also technically works on Ubuntu, Debian, Pop!_OS, Parrot OS (Debian-based), but has not been tested by the developer yet
 - **Language:** Python 3
 - **LLM Runtime:** Ollama
 - **Model:** Llama 3 **(8B)**
@@ -99,3 +102,85 @@ cyber-llm/
 │── README.md
 │── SETUP.md
 ```
+
+---
+
+## Common Use Cases
+
+**Most common use case:** After completing TryHackMe or HackTheBox machines, query your writeups to review techniques, tools, and concepts for future penetration testing engagements.
+
+Example questions:
+
+```text
+How did I solve the TryHackMe 'Jr Penetration Tester' path machines?
+What was the vulnerability in the HTB 'Lame' machine?
+How do I perform Kerberoasting again?
+What tools did I use for credential dumping in my last lab?
+How do I detect lateral movement from my notes?
+```
+
+---
+
+## Legal and Ethical Notice
+
+**Important:** This project was developed using **my personal cybersecurity notes** (TryHackMe writeups, HackTheBox labs, personal study material) in my own home lab environment. I only used these notes because they are **my own** — created through my own learning and work.
+
+**DO NOT:**
+- Steal proprietary data from companies
+- Use copyrighted material you don't own
+- Ingest confidential business information without permission
+- Publish or share someone else's proprietary notes
+
+**This project is for personal use only.** Your notes are stored locally in ChromaDB and never leave your system. However, you should only ingest data you own or have permission to use.
+
+**Important Clarification:** My personal notes **will never appear in this public GitHub repository**. They are **only available on my own machine** and are **not disclosed anywhere** in this documentation. This means:
+- No laws are being broken
+- No proprietary writeups are being shared
+- No copyrighted material is exposed
+- This is purely a technical setup guide, not a content repository
+
+> **Note:** This guide only covers installation and technical setup. Your data stays 100% local and private.
+
+---
+
+## Data Privacy and Production Use
+
+**Important:** This project can be applied to other fields where data privacy is critical:
+- **Healthcare** (HIPAA-compliant patient data)
+- **Finance** (sensitive financial records)
+- **Government** (classified or confidential data)
+- **Enterprise** (proprietary business information)
+
+**The secure part:** None of this data leaves the machine — it stays 100% local in ChromaDB.
+
+**Production warning:** If you use this in production, you must **harden the machine from external attacks** (firewall, network isolation, access controls, encryption). This project is not production-ready by default.
+
+---
+
+## Disclaimer
+
+**I take no responsibility for any of your private data you train on this.** That is **your responsibility**.
+
+You are responsible for:
+- Ensuring you have permission to use the data you ingest
+- Backing up your notes before ingestion
+- Securing your machine if used in production
+- Compliance with relevant laws (HIPAA, GDPR, etc.) if using sensitive data
+
+This is a **personal learning project**, not enterprise software. Use it responsibly.
+
+---
+
+## Future Project Phases
+
+This is a version 1 personal project with potential future enhancements:
+
+**Planned phases:**
+1. **Open-source data integration** — Add publicly available cybersecurity resources (documentation, guides, open writeups) during ingestion
+2. **Model research** — Test alternative models (Mistral, Phi, Gemma) that might perform better for cybersecurity queries
+3. **Cross-platform testing** — Further testing on alternative platforms like Pop!_OS, Ubuntu, Debian, Parrot OS, VirtualBox, etc. to ensure compatibility
+4. **Better embeddings** — Implement custom embedding models optimized for technical/security content
+5. **Reranking** — Add hybrid search (vector + keyword) and reranking for improved retrieval quality
+6. **Web UI improvements** — Add authentication, multi-user support, and better interface
+
+These are **not implemented yet**. This version is designed for small-to-medium personal datasets only.
