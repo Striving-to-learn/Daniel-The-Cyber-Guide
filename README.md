@@ -58,9 +58,6 @@ This is **not** model training or fine-tuning. The LLM does **not learn** your n
 
 Built for **small-to-medium personal datasets** (notes, labs, writeups), not enterprise. Retrieval quality depends on chunking and embeddings, and this is not a production-grade RAG system.
 
-For a more production-grade cybersecurity RAG architecture:  
-- https://github.com/simeononsecurity/sos-cyber-rag
-
 ---
 
 ## Features
